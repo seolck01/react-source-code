@@ -53,7 +53,8 @@ const React = {
   lazy,
   memo,
 
-  Fragment: REACT_FRAGMENT_TYPE,
+  // react 原生组件
+  Fragment: REACT_FRAGMENT_TYPE, 
   StrictMode: REACT_STRICT_MODE_TYPE,
   Suspense: REACT_SUSPENSE_TYPE,
 

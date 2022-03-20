@@ -117,7 +117,7 @@ const ReactElement = function(type, key, ref, self, source, owner, props) {
     $$typeof: REACT_ELEMENT_TYPE, // 只要是creatElement生成的，都是这个类型，react-dom 更新操作的时候，用来进行判断
 
     // Built-in properties that belong on the element
-    type: type, // 记录组件类型
+    type: type, // 记录组件类型 
     key: key,
     ref: ref,
     props: props,
@@ -202,7 +202,7 @@ export function createElement(type, config, children) {
     self = config.__self === undefined ? null : config.__self;
     source = config.__source === undefined ? null : config.__source;
     // Remaining properties are added to a new props object
-
+    // 判断是否为内嵌的props  RESERVED_PROPS,处理props时把内置定义的属性去掉
     for (propName in config) {
       if (
         hasOwnProperty.call(config, propName) &&
@@ -215,7 +215,7 @@ export function createElement(type, config, children) {
 
   // Children can be more than one argument, and those are transferred onto
   // the newly allocated props object.
-  // 判断是否有多个子组件
+  // 判断是否有多个子组件 第三个以后的参数都视为children
   const childrenLength = arguments.length - 2;
   if (childrenLength === 1) {
     props.children = children;
