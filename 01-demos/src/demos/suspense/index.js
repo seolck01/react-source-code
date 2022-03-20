@@ -1,5 +1,5 @@
-import React, { Suspense, lazy } from 'react'
-
+import * as React from 'react'
+const { Suspense, lazy } = React
 const LazyComp = lazy(() => import('./lazy.js'))
 
 let data = ''

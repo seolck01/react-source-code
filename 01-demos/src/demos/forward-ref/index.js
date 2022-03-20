@@ -1,6 +1,6 @@
-import React from 'react'
+import * as React from 'react'
 
-const TargetComponent = React.forwardRef((props, ref) => (
+const TargetComponent = React.forwardRef((props, ref) => ( // forwardRef 子组件向外传递ref
   <input type="text" ref={ref} />
 ))
 

@@ -191,6 +191,7 @@ export function createElement(type, config, children) {
 
   if (config != null) {
     // 判断config是否有ref属性
+    debugger
     if (hasValidRef(config)) {
       ref = config.ref;
     }

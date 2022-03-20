@@ -1,4 +1,4 @@
-import React from 'react'
+import * as React from 'react'
 
 function ChildrenDemo(props) {
   console.log(props.children)

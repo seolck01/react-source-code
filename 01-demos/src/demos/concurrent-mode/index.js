@@ -1,8 +1,9 @@
-import React, { ConcurrentMode } from 'react'
+// import React, { ConcurrentMode } from 'react'
+import * as React from 'react'
 import { flushSync } from 'react-dom'
 
 import './index.css'
-
+const {ConcurrentMode} = React
 class Parent extends React.Component {
   state = {
     async: true,

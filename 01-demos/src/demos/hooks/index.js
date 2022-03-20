@@ -2,8 +2,10 @@
  * 必须要react和react-dom 16.7以上
  */
 
-import React, { useState, useEffect } from 'react'
+// import React, { useState, useEffect } from 'react'
 
+import * as React from 'react'
+const  { useState, useEffect } = React
 export default () => {
   const [name, setName] = useState('jokcy')
 
