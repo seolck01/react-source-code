@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Route } from 'react-router-dom'
 
-// import RefDeom from './demos/ref'
+import RefDeom from './demos/ref'
 // import ContextDemo from './demos/context'
 // import ConcurrentModeDemo from './demos/concurrent-mode'
 // import SuspenseDemo from './demos/suspense'
@@ -13,8 +13,8 @@ import { Route } from 'react-router-dom'
 
 export default (
   <>
-    {/* <Route path="/ref" component={RefDeom} />
-    <Route path="/forward-ref" component={ForwardRefDemo} />
+    <Route path="/ref" component={RefDeom} />
+    {/* <Route path="/forward-ref" component={ForwardRefDemo} />
     <Route path="/context" component={ContextDemo} />
     <Route path="/concurrent" component={ConcurrentModeDemo} />
     <Route path="/suspense" component={SuspenseDemo} />

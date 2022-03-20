@@ -1,6 +1,6 @@
 // import React, { Component } from 'react'
 import * as React from "react";
-// import { Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 import routes from "./routes";
 import "./App.css";
 const { Component } = React;
@@ -9,8 +9,8 @@ class App extends Component {
     return (
       <div className="App">
         <nav className="navs">
-          {/* <Link to="/ref">RefDemo</Link>
-          <Link to="/forward-ref">ForwardRefDemo</Link>
+          <Link to="/ref">RefDemo</Link>
+          {/* <Link to="/forward-ref">ForwardRefDemo</Link>
           <Link to="/context">ContextDemo</Link>
           <Link to="/concurrent">ConcurrentModeDemo</Link>
           <Link to="/suspense">SuspenseDemo</Link>
