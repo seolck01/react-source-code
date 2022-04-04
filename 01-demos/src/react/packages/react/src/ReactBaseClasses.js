@@ -55,15 +55,14 @@ Component.prototype.isReactComponent = {};
  * @final
  * @protected
  */
-Component.prototype.setState = function(partialState, callback) { // 更新组件状态
+Component.prototype.setState = function(partialState, callback) {
   invariant(
     typeof partialState === 'object' ||
-      typeof partialState === 'function' ||  // 新版本react 16推荐使用方法
+      typeof partialState === 'function' ||
       partialState == null,
     'setState(...): takes an object of state variables to update or a ' +
       'function which returns an object of state variables.',
   );
-  // 在初始化的时候传入updater方法，即组件的更新方法是从外部传入的，不同的平台update方法不同。
   this.updater.enqueueSetState(this, partialState, callback, 'setState');
 };
 
@@ -81,7 +80,7 @@ Component.prototype.setState = function(partialState, callback) { // 更新组�
  * @final
  * @protected
  */
-Component.prototype.forceUpdate = function(callback) {  // 强制react 组件更新
+Component.prototype.forceUpdate = function(callback) {
   this.updater.enqueueForceUpdate(this, callback, 'forceUpdate');
 };
 
@@ -93,7 +92,7 @@ Component.prototype.forceUpdate = function(callback) {  // 强制react 组件更
 if (__DEV__) {
   const deprecatedAPIs = {
     isMounted: [
-      'isMounted', 
+      'isMounted',
       'Instead, make sure to clean up subscriptions and pending requests in ' +
         'componentWillUnmount to prevent memory leaks.',
     ],

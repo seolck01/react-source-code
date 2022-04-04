@@ -11,9 +11,7 @@ import {REACT_ELEMENT_TYPE} from 'shared/ReactSymbols';
 
 import ReactCurrentOwner from './ReactCurrentOwner';
 
-const hasOwnProperty = Object.prototype.hasOwnProperty;  // hasOwnProperty() 方法会返回一个布尔值，指示对象自身属性中是否具有指定的属性（也就是，是否有指定的键）。
-
-
+const hasOwnProperty = Object.prototype.hasOwnProperty;
 
 const RESERVED_PROPS = {
   key: true,
@@ -111,19 +109,18 @@ function defineRefPropWarningGetter(props, displayName) {
  * @internal
  */
 const ReactElement = function(type, key, ref, self, source, owner, props) {
-  // 设置
   const element = {
     // This tag allows us to uniquely identify this as a React Element
-    $$typeof: REACT_ELEMENT_TYPE, // 只要是creatElement生成的，都是这个类型，react-dom 更新操作的时候，用来进行判断
+    $$typeof: REACT_ELEMENT_TYPE,
 
     // Built-in properties that belong on the element
-    type: type, // 记录组件类型 
+    type: type,
     key: key,
     ref: ref,
     props: props,
 
     // Record the component responsible for creating this element.
-    _owner: owner, 
+    _owner: owner,
   };
 
   if (__DEV__) {
@@ -171,13 +168,6 @@ const ReactElement = function(type, key, ref, self, source, owner, props) {
  * Create and return a new ReactElement of the given type.
  * See https://reactjs.org/docs/react-api.html#createelement
  */
-/**
- * @description: 
- * @param {type} type 标签类型
- * @param {type} config 组件参数对象
- * @param {type} children 组件子节点
- */
-
 export function createElement(type, config, children) {
   let propName;
 
@@ -190,12 +180,9 @@ export function createElement(type, config, children) {
   let source = null;
 
   if (config != null) {
-    // 判断config是否有ref属性
-    debugger
     if (hasValidRef(config)) {
       ref = config.ref;
     }
-    // 判断是否有key属性
     if (hasValidKey(config)) {
       key = '' + config.key;
     }
@@ -203,7 +190,6 @@ export function createElement(type, config, children) {
     self = config.__self === undefined ? null : config.__self;
     source = config.__source === undefined ? null : config.__source;
     // Remaining properties are added to a new props object
-    // 判断是否为内嵌的props  RESERVED_PROPS,处理props时把内置定义的属性去掉
     for (propName in config) {
       if (
         hasOwnProperty.call(config, propName) &&
@@ -216,7 +202,6 @@ export function createElement(type, config, children) {
 
   // Children can be more than one argument, and those are transferred onto
   // the newly allocated props object.
-  // 判断是否有多个子组件 第三个以后的参数都视为children
   const childrenLength = arguments.length - 2;
   if (childrenLength === 1) {
     props.children = children;
@@ -234,17 +219,14 @@ export function createElement(type, config, children) {
   }
 
   // Resolve default props
-  // 父组件在调用子组件时，没有给子组件传值，子组件使用的就是defaultProps里定义的默认值。
-  // Comp.defaultProps = {xxx:xxx}
   if (type && type.defaultProps) {
     const defaultProps = type.defaultProps;
     for (propName in defaultProps) {
-      if (props[propName] === undefined) { // 判断是否有默认值
+      if (props[propName] === undefined) {
         props[propName] = defaultProps[propName];
       }
     }
   }
-  // 设置开发环境警告
   if (__DEV__) {
     if (key || ref) {
       const displayName =
@@ -345,7 +327,6 @@ export function cloneElement(element, config, children) {
     }
     for (propName in config) {
       if (
-        // 判断是否内置属性的props 是的话不放假propName内
         hasOwnProperty.call(config, propName) &&
         !RESERVED_PROPS.hasOwnProperty(propName)
       ) {
@@ -361,7 +342,6 @@ export function cloneElement(element, config, children) {
 
   // Children can be more than one argument, and those are transferred onto
   // the newly allocated props object.
-  // arguments.length -2 判断子组件的数量
   const childrenLength = arguments.length - 2;
   if (childrenLength === 1) {
     props.children = children;

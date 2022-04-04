@@ -7,15 +7,15 @@
  * @flow
  */
 
-import {getListener, runExtractedEventsInBatch} from 'events/EventPluginHub';
-import {registrationNameModules} from 'events/EventPluginRegistry';
-import {batchedUpdates} from 'events/ReactGenericBatching';
-import warningWithoutStack from 'shared/warningWithoutStack';
+import {getListener, runExtractedEventsInBatch} from 'react-events/EventPluginHub';
+import {registrationNameModules} from 'react-events/EventPluginRegistry';
+import {batchedUpdates} from 'react-events/ReactGenericBatching';
+import warningWithoutStack from 'react-events/warningWithoutStack';
 
 import {getInstanceFromNode} from './ReactNativeComponentTree';
 
-import type {AnyNativeEvent} from 'events/PluginModuleType';
-import type {TopLevelType} from 'events/TopLevelEventTypes';
+import type {AnyNativeEvent} from 'react-events/PluginModuleType';
+import type {TopLevelType} from 'react-events/TopLevelEventTypes';
 
 export {getListener, registrationNameModules as registrationNames};
 
@@ -87,7 +87,7 @@ const removeTouchesAtIndices = function(
  * @param {TopLevelType} topLevelType Top level type of event.
  * @param {?object} nativeEventParam Object passed from native.
  */
-export function _receiveRootNodeIDEvent(
+function _receiveRootNodeIDEvent(
   rootNodeID: number,
   topLevelType: TopLevelType,
   nativeEventParam: ?AnyNativeEvent,

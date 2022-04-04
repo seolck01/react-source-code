@@ -9,6 +9,7 @@
 
 export const enableUserTimingAPI = __DEV__;
 
+export const enableHooks = true;
 // Helps identify side effects in begin-phase lifecycle hooks and setState reducers:
 export const debugRenderPhaseSideEffects = false;
 
@@ -32,7 +33,10 @@ export const enableProfilerTimer = __PROFILE__;
 export const enableSchedulerTracing = __PROFILE__;
 
 // Only used in www builds.
-export const enableSuspenseServerRenderer = false;
+export const enableSuspenseServerRenderer = false; // TODO: __DEV__? Here it might just be false.
+
+// Only used in www builds.
+export const enableSchedulerDebugging = false;
 
 // Only used in www builds.
 export function addUserTimingListener() {
@@ -46,3 +50,5 @@ export const disableInputAttributeSyncing = false;
 // These APIs will no longer be "unstable" in the upcoming 16.7 release,
 // Control this behavior with a flag to support 16.6 minor releases in the meanwhile.
 export const enableStableConcurrentModeAPIs = false;
+
+export const warnAboutShorthandPropertyCollision = false;

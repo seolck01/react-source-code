@@ -8,7 +8,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import {findCurrentFiberUsingSlowPath} from 'react-reconciler/reflection';
-import * as ReactInstanceMap from 'shared/ReactInstanceMap';
+import {get as getInstance} from 'shared/ReactInstanceMap';
 import {
   ClassComponent,
   FunctionComponent,
@@ -121,7 +121,7 @@ function validateClassInstance(inst, methodName) {
     // This is probably too relaxed but it's existing behavior.
     return;
   }
-  if (ReactInstanceMap.get(inst)) {
+  if (getInstance(inst)) {
     // This is a public instance indeed.
     return;
   }
@@ -198,7 +198,7 @@ const ReactTestUtils = {
     if (!ReactTestUtils.isCompositeComponent(inst)) {
       return false;
     }
-    const internalInstance = ReactInstanceMap.get(inst);
+    const internalInstance = getInstance(inst);
     const constructor = internalInstance.type;
     return constructor === type;
   },
@@ -208,7 +208,7 @@ const ReactTestUtils = {
     if (!inst) {
       return [];
     }
-    const internalInstance = ReactInstanceMap.get(inst);
+    const internalInstance = getInstance(inst);
     return findAllInRenderedFiberTreeInternal(internalInstance, test);
   },
 
@@ -435,7 +435,7 @@ function makeSimulator(eventType) {
       // Normally extractEvent enqueues a state restore, but we'll just always
       // do that since we we're by-passing it here.
       enqueueStateRestore(domNode);
-      runEventsInBatch(event, true);
+      runEventsInBatch(event);
     });
     restoreStateIfNeeded();
   };

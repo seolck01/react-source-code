@@ -7,8 +7,10 @@
   "files": [
     "LICENSE",
     "README.md",
+    "build-info.json",
     "index.js",
-    "cjs/"
+    "cjs/",
+    "umd/"
   ],
   "peerDependencies": {
     "react": "^16.3.0-alpha.1"

@@ -5,7 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import * as EventPluginHub from 'react-events/EventPluginHub';
+import {runEventsInBatch} from 'react-events/EventPluginHub';
 import {accumulateTwoPhaseDispatches} from 'react-events/EventPropagators';
 import {enqueueStateRestore} from 'react-events/ReactControlledComponent';
 import {batchedUpdates} from 'react-events/ReactGenericBatching';
@@ -26,7 +26,7 @@ import {
 import getEventTarget from './getEventTarget';
 import isEventSupported from './isEventSupported';
 import {getNodeFromInstance} from '../client/ReactDOMComponentTree';
-import * as inputValueTracking from '../client/inputValueTracking';
+import {updateValueIfChanged} from '../client/inputValueTracking';
 import {setDefaultValue} from '../client/ReactDOMInput';
 import {disableInputAttributeSyncing} from 'shared/ReactFeatureFlags';
 
@@ -100,12 +100,12 @@ function manualDispatchChangeEvent(nativeEvent) {
 }
 
 function runEventInBatch(event) {
-  EventPluginHub.runEventsInBatch(event, false);
+  runEventsInBatch(event);
 }
 
 function getInstIfValueChanged(targetInst) {
   const targetNode = getNodeFromInstance(targetInst);
-  if (inputValueTracking.updateValueIfChanged(targetNode)) {
+  if (updateValueIfChanged(targetNode)) {
     return targetInst;
   }
 }

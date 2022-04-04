@@ -22,7 +22,7 @@ import {
   findCurrentHostFiber,
   findCurrentHostFiberWithNoPortals,
 } from 'react-reconciler/reflection';
-import * as ReactInstanceMap from 'shared/ReactInstanceMap';
+import {get as getInstance} from 'shared/ReactInstanceMap';
 import {HostComponent, ClassComponent} from 'shared/ReactWorkTags';
 import getComponentName from 'shared/getComponentName';
 import invariant from 'shared/invariant';
@@ -36,7 +36,7 @@ import {
   isContextProvider as isLegacyContextProvider,
 } from './ReactFiberContext';
 import {createFiberRoot} from './ReactFiberRoot';
-import * as ReactFiberDevToolsHook from './ReactFiberDevToolsHook';
+import {injectInternals} from './ReactFiberDevToolsHook';
 import {
   computeUniqueAsyncExpiration,
   requestCurrentTime,
@@ -52,12 +52,17 @@ import {
   syncUpdates,
   interactiveUpdates,
   flushInteractiveUpdates,
+  flushPassiveEffects,
 } from './ReactFiberScheduler';
 import {createUpdate, enqueueUpdate} from './ReactUpdateQueue';
 import ReactFiberInstrumentation from './ReactFiberInstrumentation';
-import * as ReactCurrentFiber from './ReactCurrentFiber';
-import {getStackByFiberInDevAndProd} from './ReactCurrentFiber';
+import {
+  getStackByFiberInDevAndProd,
+  phase as ReactCurrentFiberPhase,
+  current as ReactCurrentFiberCurrent,
+} from './ReactCurrentFiber';
 import {StrictMode} from './ReactTypeOfMode';
+import {Sync} from './ReactFiberExpirationTime';
 
 type OpaqueRoot = FiberRoot;
 
@@ -93,7 +98,7 @@ function getContextForSubtree(
     return emptyContextObject;
   }
 
-  const fiber = ReactInstanceMap.get(parentComponent);
+  const fiber = getInstance(parentComponent);
   const parentContext = findCurrentUnmaskedContext(fiber);
 
   if (fiber.tag === ClassComponent) {
@@ -114,8 +119,8 @@ function scheduleRootUpdate(
 ) {
   if (__DEV__) {
     if (
-      ReactCurrentFiber.phase === 'render' &&
-      ReactCurrentFiber.current !== null &&
+      ReactCurrentFiberPhase === 'render' &&
+      ReactCurrentFiberCurrent !== null &&
       !didWarnAboutNestedUpdates
     ) {
       didWarnAboutNestedUpdates = true;
@@ -125,7 +130,7 @@ function scheduleRootUpdate(
           'triggering nested component updates from render is not allowed. ' +
           'If necessary, trigger nested updates in componentDidUpdate.\n\n' +
           'Check the render method of %s.',
-        getComponentName(ReactCurrentFiber.current.type) || 'Unknown',
+        getComponentName(ReactCurrentFiberCurrent.type) || 'Unknown',
       );
     }
   }
@@ -145,9 +150,11 @@ function scheduleRootUpdate(
     );
     update.callback = callback;
   }
-  enqueueUpdate(current, update);
 
+  flushPassiveEffects();
+  enqueueUpdate(current, update);
   scheduleWork(current, expirationTime);
+
   return expirationTime;
 }
 
@@ -184,7 +191,7 @@ export function updateContainerAtExpirationTime(
 }
 
 function findHostInstance(component: Object): PublicInstance | null {
-  const fiber = ReactInstanceMap.get(component);
+  const fiber = getInstance(component);
   if (fiber === undefined) {
     if (typeof component.render === 'function') {
       invariant(false, 'Unable to find node on an unmounted component.');
@@ -208,7 +215,7 @@ function findHostInstanceWithWarning(
   methodName: string,
 ): PublicInstance | null {
   if (__DEV__) {
-    const fiber = ReactInstanceMap.get(component);
+    const fiber = getInstance(component);
     if (fiber === undefined) {
       if (typeof component.render === 'function') {
         invariant(false, 'Unable to find node on an unmounted component.');
@@ -333,10 +340,49 @@ export function findHostInstanceWithNoPortals(
   return hostFiber.stateNode;
 }
 
+let overrideProps = null;
+
+if (__DEV__) {
+  const copyWithSetImpl = (
+    obj: Object | Array<any>,
+    path: Array<string | number>,
+    idx: number,
+    value: any,
+  ) => {
+    if (idx >= path.length) {
+      return value;
+    }
+    const key = path[idx];
+    const updated = Array.isArray(obj) ? obj.slice() : {...obj};
+    // $FlowFixMe number or string is fine here
+    updated[key] = copyWithSetImpl(obj[key], path, idx + 1, value);
+    return updated;
+  };
+
+  const copyWithSet = (
+    obj: Object | Array<any>,
+    path: Array<string | number>,
+    value: any,
+  ): Object | Array<any> => {
+    return copyWithSetImpl(obj, path, 0, value);
+  };
+
+  // Support DevTools props for function components, forwardRef, memo, host components, etc.
+  overrideProps = (fiber: Fiber, path: Array<string | number>, value: any) => {
+    flushPassiveEffects();
+    fiber.pendingProps = copyWithSet(fiber.memoizedProps, path, value);
+    if (fiber.alternate) {
+      fiber.alternate.pendingProps = fiber.pendingProps;
+    }
+    scheduleWork(fiber, Sync);
+  };
+}
+
 export function injectIntoDevTools(devToolsConfig: DevToolsConfig): boolean {
   const {findFiberByHostInstance} = devToolsConfig;
-  return ReactFiberDevToolsHook.injectInternals({
+  return injectInternals({
     ...devToolsConfig,
+    overrideProps,
     findHostInstanceByFiber(fiber: Fiber): Instance | TextInstance | null {
       const hostFiber = findCurrentHostFiber(fiber);
       if (hostFiber === null) {

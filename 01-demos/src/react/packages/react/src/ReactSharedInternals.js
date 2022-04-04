@@ -8,9 +8,13 @@
 import assign from 'object-assign';
 import {
   unstable_cancelCallback,
+  unstable_shouldYield,
   unstable_now,
   unstable_scheduleCallback,
   unstable_runWithPriority,
+  unstable_getFirstCallbackNode,
+  unstable_pauseExecution,
+  unstable_continueExecution,
   unstable_wrapCallback,
   unstable_getCurrentPriorityLevel,
 } from 'scheduler';
@@ -43,10 +47,14 @@ if (__UMD__) {
   Object.assign(ReactSharedInternals, {
     Scheduler: {
       unstable_cancelCallback,
+      unstable_shouldYield,
       unstable_now,
       unstable_scheduleCallback,
       unstable_runWithPriority,
       unstable_wrapCallback,
+      unstable_getFirstCallbackNode,
+      unstable_pauseExecution,
+      unstable_continueExecution,
       unstable_getCurrentPriorityLevel,
     },
     SchedulerTracing: {

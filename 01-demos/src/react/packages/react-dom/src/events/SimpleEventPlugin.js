@@ -10,13 +10,13 @@
 import type {
   TopLevelType,
   DOMTopLevelEventType,
-} from 'events/TopLevelEventTypes';
+} from 'react-events/TopLevelEventTypes';
 import type {
   DispatchConfig,
   ReactSyntheticEvent,
-} from 'events/ReactSyntheticEventType';
+} from 'react-events/ReactSyntheticEventType';
 import type {Fiber} from 'react-reconciler/src/ReactFiber';
-import type {EventTypes, PluginModule} from 'events/PluginModuleType';
+import type {EventTypes, PluginModule} from 'react-events/PluginModuleType';
 
 import {accumulateTwoPhaseDispatches} from 'react-events/EventPropagators';
 import SyntheticEvent from 'react-events/SyntheticEvent';
