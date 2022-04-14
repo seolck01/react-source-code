@@ -366,8 +366,8 @@ function ReactRoot(
   isConcurrent: boolean,
   hydrate: boolean,
 ) {
-  const root = createContainer(container, isConcurrent, hydrate);
-  this._internalRoot = root;
+  const root = createContainer(container, isConcurrent, hydrate); // 创建一个fiber root
+  this._internalRoot = root;  // 赋值操作
 }
 ReactRoot.prototype.render = function(
   children: ReactNodeList,
@@ -451,7 +451,7 @@ ReactRoot.prototype.createBatch = function(): Batch {
  * @return {boolean} True if the DOM is a valid DOM node.
  * @internal
  */
-function isValidContainer(node) {
+function isValidContainer(node) { // 判断是否为有效的容器
   return !!(
     node &&
     (node.nodeType === ELEMENT_NODE ||
@@ -498,6 +498,7 @@ function legacyCreateRootFromDOMContainer(
   const shouldHydrate =
     forceHydrate || shouldHydrateDueToLegacyHeuristic(container);
   // First clear any existing content.
+  // 如果是hydrate 渲染的页面，不清除页面本来的元素结点
   if (!shouldHydrate) {
     let warned = false;
     let rootSibling;
@@ -540,7 +541,7 @@ function legacyRenderSubtreeIntoContainer(
   parentComponent: ?React$Component<any, any>,
   children: ReactNodeList,
   container: DOMContainer,
-  forceHydrate: boolean,
+  forceHydrate: boolean, // 该参数 ReactDOM.render为 false , hydrate 为 true
   callback: ?Function,
 ) {
   // TODO: Ensure all entry points contain this check
@@ -558,10 +559,10 @@ function legacyRenderSubtreeIntoContainer(
   let root: Root = (container._reactRootContainer: any);
   if (!root) {
     // Initial mount
-    root = container._reactRootContainer = legacyCreateRootFromDOMContainer(
+    root = container._reactRootContainer = legacyCreateRootFromDOMContainer( // 如果没有容器，用该函数创建容器，返回一个 fiber root
       container,
       forceHydrate,
-    );
+    ); 
     if (typeof callback === 'function') {
       const originalCallback = callback;
       callback = function() {
@@ -569,9 +570,9 @@ function legacyRenderSubtreeIntoContainer(
         originalCallback.call(instance);
       };
     }
-    // Initial mount should not be batched.
+    // Initial mount should not be batched. 批量更新操作
     unbatchedUpdates(() => {
-      if (parentComponent != null) {
+      if (parentComponent != null) { 
         root.legacy_renderSubtreeIntoContainer(
           parentComponent,
           children,
@@ -597,7 +598,8 @@ function legacyRenderSubtreeIntoContainer(
         callback,
       );
     } else {
-      root.render(children, callback);
+    // 实际调用
+      root.render(children, callback); // ReactRoot.render
     }
   }
   return getPublicRootInstance(root._internalRoot);

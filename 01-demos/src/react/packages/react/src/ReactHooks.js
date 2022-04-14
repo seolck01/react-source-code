@@ -52,7 +52,7 @@ export function useContext<T>(
 }
 
 export function useState<S>(initialState: (() => S) | S) {
-  const dispatcher = resolveDispatcher();
+  const dispatcher = resolveDispatcher(); // 在react-dom中调用渲染实例
   return dispatcher.useState(initialState);
 }
 

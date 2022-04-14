@@ -188,9 +188,9 @@ function cloneUpdateQueue<State>(
 
 export function createUpdate(expirationTime: ExpirationTime): Update<*> {
   return {
-    expirationTime: expirationTime,
+    expirationTime: expirationTime, // 对应该次创建的更新时间
 
-    tag: UpdateState,
+    tag: UpdateState, // 0 Update 更新state   | 1 ReplaceSate 替代state | 2 ForceUpdate 强制更新 | 3 
     payload: null,
     callback: null,
 
@@ -223,7 +223,7 @@ export function enqueueUpdate<State>(fiber: Fiber, update: Update<State>) {
     queue1 = fiber.updateQueue;
     queue2 = null;
     if (queue1 === null) {
-      queue1 = fiber.updateQueue = createUpdateQueue(fiber.memoizedState);
+      queue1 = fiber.updateQueue = createUpdateQueue(fiber.memoizedState); //重置对象
     }
   } else {
     // There are two owners.

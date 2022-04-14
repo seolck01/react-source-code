@@ -145,7 +145,7 @@ function traverseAllChildrenImpl(
   const nextNamePrefix =
     nameSoFar === '' ? SEPARATOR : nameSoFar + SUBSEPARATOR;
 
-  if (Array.isArray(children)) {
+  if (Array.isArray(children)) { // 
     for (let i = 0; i < children.length; i++) {
       child = children[i];
       nextName = nextNamePrefix + getComponentKey(child, i);
@@ -290,9 +290,9 @@ function mapSingleChildIntoContext(bookKeeping, child, childKey) {
 
   let mappedChild = func.call(context, child, bookKeeping.count++);
   if (Array.isArray(mappedChild)) {
-    mapIntoWithKeyPrefixInternal(mappedChild, result, childKey, c => c);
+    mapIntoWithKeyPrefixInternal(mappedChild, result, childKey, c => c); // 继续递归
   } else if (mappedChild != null) {
-    if (isValidElement(mappedChild)) {
+    if (isValidElement(mappedChild)) { // 判断是否是一个合理的react element 
       mappedChild = cloneAndReplaceKey(
         mappedChild,
         // Keep both the (mapped) and old keys if they differ, just as
@@ -313,14 +313,14 @@ function mapIntoWithKeyPrefixInternal(children, array, prefix, func, context) {
   if (prefix != null) {
     escapedPrefix = escapeUserProvidedKey(prefix) + '/';
   }
-  const traverseContext = getPooledTraverseContext(
+  const traverseContext = getPooledTraverseContext( // 判断对象是否存在。 存在，不存在的话缓存池推出栈。腾出空间
     array,
     escapedPrefix,
     func,
     context,
   );
-  traverseAllChildren(children, mapSingleChildIntoContext, traverseContext);
-  releaseTraverseContext(traverseContext);
+  traverseAllChildren(children, mapSingleChildIntoContext, traverseContext); 
+  releaseTraverseContext(traverseContext); // LRU 缓存池对象池。如果存在就push
 }
 
 /**
@@ -336,7 +336,7 @@ function mapIntoWithKeyPrefixInternal(children, array, prefix, func, context) {
  * @param {*} context Context for mapFunction.
  * @return {object} Object containing the ordered map of results.
  */
-function mapChildren(children, func, context) {
+function mapChildren(children, func, context) { // 
   if (children == null) {
     return children;
   }

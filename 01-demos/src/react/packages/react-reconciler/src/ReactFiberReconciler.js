@@ -135,7 +135,7 @@ function scheduleRootUpdate(
     }
   }
 
-  const update = createUpdate(expirationTime);
+  const update = createUpdate(expirationTime); // 创建Update对象
   // Caution: React DevTools currently depends on this property
   // being called "element".
   update.payload = {element};
@@ -152,8 +152,8 @@ function scheduleRootUpdate(
   }
 
   flushPassiveEffects();
-  enqueueUpdate(current, update);
-  scheduleWork(current, expirationTime);
+  enqueueUpdate(current, update); // 加入到fiber更新队列中
+  scheduleWork(current, expirationTime); // 开始进行任务调度
 
   return expirationTime;
 }
@@ -287,7 +287,7 @@ export function updateContainer(
 ): ExpirationTime {
   const current = container.current;
   const currentTime = requestCurrentTime();
-  const expirationTime = computeExpirationForFiber(currentTime, current);
+  const expirationTime = computeExpirationForFiber(currentTime, current);  // 计算过期时间
   return updateContainerAtExpirationTime(
     element,
     container,
